@@ -27,4 +27,4 @@ REF : https://www.kaggle.com/c/leaf-classification/data
 - texture_1, texture_2, texture_3, ..., texture_64 - each of the 64 attribute vectors for the texture feature
 ## Classifiers class design :
 
-![](https://depot.dinf.usherbrooke.ca/dinf/cours/h21/ift712/aitm2302/project/blob/master/IFT712-Project.png?raw=true)
+![](IFT712-Project.png)
