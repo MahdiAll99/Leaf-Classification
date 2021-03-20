@@ -43,7 +43,7 @@ if __name__ == '__main__':
     test_labels =[]
 
     #Create a classifier
-    clf = getClassifier(classifier='KernelMethod', alpha = 0.001, kernel = 'rbf')
+    clf = getClassifier(classifier='KernelModel', alpha = 0.001, kernel = 'rbf')
 
     
     #Fit and predict
