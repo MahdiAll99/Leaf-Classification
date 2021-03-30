@@ -1,5 +1,5 @@
 
-from src.DataManagement.Preprocessing import Preprocesser
+from src.DataManagement.Preprocesser import Preprocesser
 import re
 
 #This class inherits from Preprocesser

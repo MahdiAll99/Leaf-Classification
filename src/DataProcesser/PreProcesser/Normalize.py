@@ -1,6 +1,6 @@
 
 import pandas as pd
-from src.DataManagement.Preprocessing import Preprocesser
+from src.DataManagement.Preprocesser import Preprocesser
 from sklearn.preprocessing import MinMaxScaler
 
 class Normalize(Preprocesser):
