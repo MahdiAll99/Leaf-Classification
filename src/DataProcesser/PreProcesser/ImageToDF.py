@@ -23,7 +23,17 @@ class ImageToDF(Preprocesser):
         ----------
         Data frame with image included
         """"
-        pass
+        DATA_PATH = os.path.dirname(os.path.realpath(__file__))
+        DATA_PATH = DATA_PATH.parent.absolute() / 'data'
+        IMAGES_PATH = DATA_PATH + self.hyperparams['Images_Path']
+
+        columns = ['Pixel_%d'%i for i in range(np.prod((64,64)))]
+        img_df = pd.DataFrame(columns = columns)
+        
+        for filename in os.listdir(IMAGES_PATH):
+            img = Image.open(IMAGES_PATH + filename)
+            img = np.array(img.resize((64,64))).flatten()
+            img_df.loc[int(filename.strip('.jpg'))] = img
 
     def jsonify(self, ):
         out = super().jsonify()
