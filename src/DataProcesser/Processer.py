@@ -136,3 +136,21 @@ class DataProcesser:
     def split_data(self,test_ratio = 0.1):
         #Seperates dataset into train sets and test sets (10%)
         self._train_indexes, self._test_indexes = train_test_split(self._df.index, random_state = self._seed)
+
+    def k_fold(self, k):
+        """Returns generator that produces training sets and validation sets"""
+
+        # 1.Splits data
+        if(self._train_indexes is None):    
+            self.split_data(test_ratio=0.1)
+
+        # 2.Creates KFold generator
+        kf = _KFold(n_splits=k,shuffle=True,random_state=self._seed)
+        
+        # 3.Create generator that splits the existing data and labels for train and validation sets
+        for train_idxes, val_idxes in kf.split(self.df_Train.to_numpy(), self.labels_Train.to_numpy()):
+            train_data = self.df_Train.iloc[train_idxes]
+            val_data = self.df_Train.iloc[val_idxes]
+            train_labels = self.labels_Train.iloc[train_idxes]
+            val_labels = self.labels_Train.iloc[val_idxes]
+            yield  train_data, val_data, train_labels, val_labels
