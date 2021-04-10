@@ -154,3 +154,7 @@ class DataProcesser:
             train_labels = self.labels_Train.iloc[train_idxes]
             val_labels = self.labels_Train.iloc[val_idxes]
             yield  train_data, val_data, train_labels, val_labels
+
+    def setSeed(self, seed):
+        """Set the seed attributre for the random generator."""
+        self._seed = seed
