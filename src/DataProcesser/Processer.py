@@ -132,3 +132,7 @@ class DataProcesser:
         self.importData(label_name=label_name,filepath=filepath)
         self.preprocess(verbose=verbose)
         self.saveData(savepath=savepath, verbose=verbose)
+    
+    def split_data(self,test_ratio = 0.1):
+        #Seperates dataset into train sets and test sets (10%)
+        self._train_indexes, self._test_indexes = train_test_split(self._df.index, random_state = self._seed)
