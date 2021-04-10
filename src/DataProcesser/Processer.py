@@ -89,3 +89,25 @@ class DataProcesser:
             self._df = strategy.preprocess(self._df)
         if(verbose):  
             print('Done!')
+
+    #This method is quite the implementation of the two previous methods (proprocess and importData)
+    def importAndPreprocess(self,label_name,filepath = RAWDATA_PATH, savepath = PROCESSEDDATA_FOLDER, verbose=False):
+        """ 
+        Checks if pre-processed data already saved. 
+        Loads and returns pre-processed data if so. 
+        Else, generates preprocessed data and saves it. 
+        """
+        # 1. Check to see if data has already been preprocessed
+        if(os.path.isfile(savepath + PROCESSED_FILENAME)):
+            with open(savepath + PROCESSED_FILENAME) as f:
+                preprocessedJson = json.load(f)
+            for key in preprocessedJson:
+                if(preprocessedJson[key] == self.cmds):
+                    preprocessedPath = savepath + key
+                    if(verbose): 
+                        print('Loading saved preprocessed data from %s'%(preprocessedPath))
+                    return self.importData(label_name = label_name,filepath = preprocessedPath)
+        # 2.Else, load raw data, preprocess and save
+        self.importData(label_name=label_name,filepath=filepath)
+        self.preprocess(verbose=verbose)
+        self.saveData(savepath=savepath, verbose=verbose)
