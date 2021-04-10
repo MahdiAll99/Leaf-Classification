@@ -63,3 +63,14 @@ class DataProcesser:
         return self._labels.loc[self.train_indexes]
     def labels_Test(self):
         return self._labels.loc[self.test_indexes]
+
+    def importData(self, label_name, filepath = RAWDATA_PATH):
+        """Import data from file"""
+        #Obtain features from train.csv
+        # 1. Obtain csv of features
+        self._df = pd.read_csv(filepath, index_col = 'id')
+        # 2. Seperate labels
+        self.label_name = label_name
+        self._labels = self._df[self.label_name]
+        # Clean Up RAM
+        del self._df[label_name]
