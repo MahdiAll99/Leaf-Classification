@@ -1,5 +1,5 @@
 
-from src.DataManagement.Preprocesser import Preprocesser
+from src.DataProcesser.PreProcesser import Preprocesser
 import pathlib
 import os
 import pandas as pd
@@ -22,7 +22,7 @@ class ImageToDF(Preprocesser):
         Returns
         ----------
         Data frame with image included
-        """"
+        """
         DATA_PATH = os.path.dirname(os.path.realpath(__file__))
         DATA_PATH = DATA_PATH.parent.absolute() / 'data'
         IMAGES_PATH = DATA_PATH + self.hyperparams['Images_Path']

@@ -1,6 +1,6 @@
 
 import pandas as pd
-from src.DataManagement.Preprocesser import Preprocesser
+from src.DataProcesser.PreProcesser import Preprocesser
 from sklearn.discriminant_analysis  import LinearDiscriminantAnalysis as LDA
 
 class LDA(Preprocesser):
@@ -16,7 +16,7 @@ class LDA(Preprocesser):
         Returns
         ----------
         Data frame with transformed data
-        """"
+        """
         data_transformed = self._method.fit_transform(data)
         return pd.DataFrame(data_transformed,columns=['LDA_axis%d'%i for i in range(len(self._method.singular_values_))], index = data.index)
 

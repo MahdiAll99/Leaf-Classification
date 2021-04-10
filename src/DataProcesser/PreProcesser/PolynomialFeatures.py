@@ -1,6 +1,6 @@
 
 import pandas as pd
-from src.DataManagement.Preprocesser import Preprocesser
+from src.DataProcesser.PreProcesser import Preprocesser
 from sklearn.preprocessing import PolynomialFeatures as PF
 
 class PolynomialFeatures(Preprocesser):
@@ -16,7 +16,7 @@ class PolynomialFeatures(Preprocesser):
         Returns
         ----------
         Data frame with transformed/Generated data
-        """"
+        """
         return pd.DataFrame(self._method.fit_transform(data), columns = self._method.get_feature_names(data.columns), index = data.index)
 
     def jsonify(self):
