@@ -90,6 +90,27 @@ class DataProcesser:
         if(verbose):  
             print('Done!')
 
+    def saveData(self, savepath = PROCESSEDDATA_FOLDER, verbose = False):
+        # 1.Load already saved file
+        if(not os.path.isfile(savepath + PROCESSED_FILENAME)):
+            preprocessedJS = {}
+        else:
+            with open(savepath + PROCESSED_FILENAME) as f:
+                preprocessedJS = json.load(f)
+        
+        # 2.Add commands with uuid that referenced saved data
+        uuidfilename = str(uuid.uuid1()) + '.csv'
+        preprocessedJS[uuidfilename] = self.cmds
+        
+        # 3.save :
+        if(verbose): 
+            print('Saving preprocessed data to %s'%(savepath + uuidfilename))
+        with open(savepath + PROCESSED_FILENAME,'w') as f:
+            json.dump(preprocessedJS, f,indent=4)
+        df_tobesaved = self._df.copy()
+        df_tobesaved[self.label_name] = self._labels
+        df_tobesaved.to_csv(savepath + uuidfilename)
+
     #This method is quite the implementation of the two previous methods (proprocess and importData)
     def importAndPreprocess(self,label_name,filepath = RAWDATA_PATH, savepath = PROCESSEDDATA_FOLDER, verbose=False):
         """ 
@@ -100,9 +121,9 @@ class DataProcesser:
         # 1. Check to see if data has already been preprocessed
         if(os.path.isfile(savepath + PROCESSED_FILENAME)):
             with open(savepath + PROCESSED_FILENAME) as f:
-                preprocessedJson = json.load(f)
-            for key in preprocessedJson:
-                if(preprocessedJson[key] == self.cmds):
+                preprocessedJS = json.load(f)
+            for key in preprocessedJS:
+                if(preprocessedJS[key] == self.cmds):
                     preprocessedPath = savepath + key
                     if(verbose): 
                         print('Loading saved preprocessed data from %s'%(preprocessedPath))
