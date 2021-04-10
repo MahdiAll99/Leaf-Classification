@@ -25,14 +25,14 @@ class DataProcesser:
     label_name : name of the label(column) that we will extract from the csv file
     _labels : labels extracted from csv dile
     _seed : used to initialize the random number generator
-    cmds : contain the method that will be used and hyperparameters
+    cases : contain the method that will be used and hyperparameters
     """
-    def __init__(self, seed = 0, cmds = []):
+    def __init__(self, seed = 0, cases = []):
         self._df = None
         self._labels = None
         self.label_name = ""
         self._seed = seed
-        self.cmds = cmds
+        self.cases = cases
 
         self._train_indexes = None 
         self._test_indexes = None
@@ -81,7 +81,7 @@ class DataProcesser:
         # Convert cmd into a list of Preprocessing Strategies
         if(verbose): 
             print('Pre-Processing.....')
-        for i,cmd in enumerate(self.cmds):
+        for i,cmd in enumerate(self.cases):
             if(verbose): 
                 #Method used in data processing
                 print('\tMethod #%d:'%i,cmd)
@@ -101,7 +101,7 @@ class DataProcesser:
         
         # 2.Add commands with uuid that referenced saved data
         uuidfilename = str(uuid.uuid1()) + '.csv'
-        preprocessedJS[uuidfilename] = self.cmds
+        preprocessedJS[uuidfilename] = self.cases
         
         # 3.save :
         if(verbose): 
@@ -124,7 +124,7 @@ class DataProcesser:
             with open(savepath + PROCESSED_FILENAME) as f:
                 preprocessedJS = json.load(f)
             for key in preprocessedJS:
-                if(preprocessedJS[key] == self.cmds):
+                if(preprocessedJS[key] == self.cases):
                     preprocessedPath = savepath + key
                     if(verbose): 
                         print('Loading saved preprocessed data from %s'%(preprocessedPath))
@@ -157,11 +157,11 @@ class DataProcesser:
             yield  train_data, val_data, train_labels, val_labels
 
 
-    def CreateCommand(self,method = "",**kwargs):
+    def CreateCase(self,method = "",**kwargs):
         """ Function that converts arguments to JSON that will be added as parameter to calculation. """
         hyperparams = {**kwargs}
         out = {'method' : method, 'hyperparams':hyperparams}
-        self.cmds.append(out)
+        self.cases.append(out)
 
     def setSeed(self, seed):
         """Set the seed attributre for the random generator."""
@@ -171,47 +171,22 @@ if __name__ == '__main__':
     METHOD = 0 
     if(METHOD == 0):
         #Testing PolynomialFeatures, Normalize, PCA
-        dm = DataProcesser()
-        dm.CreateCommand(method='PolynomialFeatures',degree = 2)
-        dm.CreateCommand(method='Normalize')
-        dm.CreateCommand(method='LDA',n_components=None)
+        DP = DataProcesser()
+        #Create some test cases :
+        DP.CreateCase(method='Normalize')
+        DP.CreateCase(method='PolynomialFeatures',degree = 2)
+        DP.CreateCase(method='LDA',n_components=None)
 
         #Testing Importing and Preprocessing Data
-        dm.importAndPreprocess(label_name = 'species')
+        DP.importAndPreprocess(label_name = 'species')
 
-        #Spliting data into [Train & Validation] & [Test] datasets
-        dm.setSeed(0) #Important in order to always have same test set
-        dm.split_data(test_ratio=0.1)
-        print("Amount of Test observations:", len(dm.df_Test))
+        #Spliting data into Train & Validation & Test sets
+        DP.setSeed(0) #Important in order to always have same test set
+        DP.split_data(test_ratio=0.1)
+        print("Number of Test observations:", len(DP.df_Test))
 
         #Getting K-fold datasets
-        for i, (X_train, X_val, Y_train, Y_val) in enumerate(dm.k_fold(k=10)):
+        for i, (X_train, X_val, Y_train, Y_val) in enumerate(DP.k_fold(k=10)):
             print('K =', i)
-            print('\tAmount of Train observations:', len(X_train))
-            print('\tAmount of Validation observations:', len(X_val))
-    else:
-        #Another valid method
-        cmds = [
-            {   'method':'LDA',
-                'hyperparams':{
-                    'n_components':100
-                }
-            },
-
-            {   'method':'Normalize',
-                'hyperparams':{}
-            },
-
-            {   'method':'IncludeImages',
-                'hyperparams':{}
-            }
-        ]
-        dm2 = DataProcesser(cmds=cmds)
-        dm2.importAndPreprocess(label_name = 'species')
-        dm2.setSeed(0)
-        dm2.split_data(test_ratio=0.1)
-        print("Amount of Test observations:", len(dm2.df_Test))
-        for i, (X_train, X_val, Y_train, Y_val) in enumerate(dm2.k_fold(k=10)):
-            print('K =', i)
-            print('\tAmount of Train observations:', len(X_train))
-            print('\tAmount of Validation observations:', len(X_val))
+            print('\tNumber of Train observations:', len(X_train))
+            print('\tNumber of Validation observations:', len(X_val))
