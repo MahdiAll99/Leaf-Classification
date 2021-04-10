@@ -162,7 +162,7 @@ class ResultManager:
         }
 
         # 1. Prepare data
-        DP = DataManager(**DataPreProcessingParams)
+        DP = PreProcesser(**DataPreProcessingParams)
         DP.importAndPreprocess(label_name = 'species',verbose=verbose)
         DP.split_data(test_ratio=0.1)
 
@@ -176,10 +176,63 @@ class ResultManager:
         if(verbose): print('Done!')
 
         # 4. Prediction
-        if(verbose): print('Prediciting Test Set...',end='')
+        if(verbose): 
+            print('Prediciting Test Set...',end='')
         predictions = clf.predict(DP.df_Test.values)
-        if(verbose): print('Done!')
+        if(verbose): 
+            print('Done!')
 
         # 5. Statistics
         stats.appendLabels(predictions, DP.labels_Test.values)
         return {'predictions':predictions,'truths':DP.labels_Test.values, 'metrics':stats.getStatistics()}
+
+    def run(DataPreProcessingParams:dict, ClassificationParams:dict, StatisticsParams:list, verbose = False):
+        """
+        Launches a machine learning classification evaluation using cross validation
+
+        Parameters
+        ==========
+        DataPreProcessingParams: dict -> Parameters to send to the DataManagement module.
+        ClassificationParams: dict -> Parameters to send to the Classifiers module.
+        StatisticsParams: list -> Parameters to send to the Statistician module.
+
+        Returns
+        =======
+        Results with hyperparameters. All in dictionary format.
+        """
+        cmd = {
+            'DataPreProcessingParams':DataPreProcessingParams,
+            'ClassificationParams':ClassificationParams,
+            'StatisticsParams':StatisticsParams
+        }
+
+        # 1. Prepare data
+        DP = PreProcesser(**DataPreProcessingParams)
+        DP.importAndPreprocess(label_name = 'species',verbose=verbose)
+
+        # 2. Create Statistician
+        stats = statistics.Statistician(StatisticsParams)
+
+        # 3. Perform K-fold
+        if(verbose): print('Performing K-fold....',end='')
+        for train_data, val_data, train_labels, val_labels in DP.k_fold(k=10):
+            
+            # 4. Create Classifier
+            clf = classification.getClassifier(**ClassificationParams)
+
+            # 5. Fit classifier with training data and labels
+            clf.fit(train_data, train_labels)
+
+            # 6. Get predictions
+            predictions = clf.predict(val_data)
+
+            # 7. Add labels to statistician
+            stats.appendLabels(predictions, val_labels.values)
+
+        if(verbose): 
+            print('Done!')
+        # 8. Calculate average statistics
+        statisticsJson = stats.getStatistics()
+        
+        stats_name = str(uuid.uuid1())
+        return {stats_name:{'pipeline':cmd,'results':statisticsJson}}
