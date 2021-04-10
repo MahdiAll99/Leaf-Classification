@@ -1,9 +1,10 @@
 #!/usr/bin/python
 #-*- coding: utf-8 -*-
+import sys
 import pandas as pd
 import os
 import pathlib
-from src.DataProcesser import Preprocessing as preproc
+from src.DataProcesser import PreProcesser as preproc
 import json
 import uuid
 import numpy as np
@@ -13,7 +14,7 @@ from sklearn.preprocessing import OneHotEncoder
 
 
 
-DATA_PATH = str(pathlib.Path(__file__).parent.absolute()) + '/../../data/'
+DATA_PATH = str(pathlib.Path(__file__).parent.parent.parent.absolute()) + '/data/'
 RAWDATA_PATH = DATA_PATH + '/raw/train.csv'
 PROCESSEDDATA_FOLDER = DATA_PATH + '/processed/'
 PROCESSED_FILENAME = 'processed.json'
@@ -155,6 +156,62 @@ class DataProcesser:
             val_labels = self.labels_Train.iloc[val_idxes]
             yield  train_data, val_data, train_labels, val_labels
 
+
+    def CreateCommand(self,method = "",**kwargs):
+        """ Function that converts arguments to JSON that will be added as parameter to calculation. """
+        hyperparams = {**kwargs}
+        out = {'method' : method, 'hyperparams':hyperparams}
+        self.cmds.append(out)
+
     def setSeed(self, seed):
         """Set the seed attributre for the random generator."""
         self._seed = seed
+
+if __name__ == '__main__':
+    METHOD = 0 
+    if(METHOD == 0):
+        #Testing PolynomialFeatures, Normalize, PCA
+        dm = DataProcesser()
+        dm.CreateCommand(method='PolynomialFeatures',degree = 2)
+        dm.CreateCommand(method='Normalize')
+        dm.CreateCommand(method='LDA',n_components=None)
+
+        #Testing Importing and Preprocessing Data
+        dm.importAndPreprocess(label_name = 'species')
+
+        #Spliting data into [Train & Validation] & [Test] datasets
+        dm.setSeed(0) #Important in order to always have same test set
+        dm.split_data(test_ratio=0.1)
+        print("Amount of Test observations:", len(dm.df_Test))
+
+        #Getting K-fold datasets
+        for i, (X_train, X_val, Y_train, Y_val) in enumerate(dm.k_fold(k=10)):
+            print('K =', i)
+            print('\tAmount of Train observations:', len(X_train))
+            print('\tAmount of Validation observations:', len(X_val))
+    else:
+        #Another valid method
+        cmds = [
+            {   'method':'LDA',
+                'hyperparams':{
+                    'n_components':100
+                }
+            },
+
+            {   'method':'Normalize',
+                'hyperparams':{}
+            },
+
+            {   'method':'IncludeImages',
+                'hyperparams':{}
+            }
+        ]
+        dm2 = DataProcesser(cmds=cmds)
+        dm2.importAndPreprocess(label_name = 'species')
+        dm2.setSeed(0)
+        dm2.split_data(test_ratio=0.1)
+        print("Amount of Test observations:", len(dm2.df_Test))
+        for i, (X_train, X_val, Y_train, Y_val) in enumerate(dm2.k_fold(k=10)):
+            print('K =', i)
+            print('\tAmount of Train observations:', len(X_train))
+            print('\tAmount of Validation observations:', len(X_val))
