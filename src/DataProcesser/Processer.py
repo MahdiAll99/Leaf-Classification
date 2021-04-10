@@ -74,3 +74,18 @@ class DataProcesser:
         self._labels = self._df[self.label_name]
         # Clean Up RAM
         del self._df[label_name]
+    
+    def preprocess(self,verbose=False):
+        """Preprocess data. Save Preprocessed data to file."""
+        # Convert cmd into a list of Preprocessing Strategies
+        if(verbose): 
+            print('Pre-Processing.....')
+        for i,cmd in enumerate(self.cmds):
+            if(verbose): 
+                #Method used in data processing
+                print('\tMethod #%d:'%i,cmd)
+
+            strategy = getattr(preproc,cmd['method'])(**cmd['hyperparams'])
+            self._df = strategy.preprocess(self._df)
+        if(verbose):  
+            print('Done!')
