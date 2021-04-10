@@ -38,5 +38,4 @@ else:
                     #Delete zipfile as the contents have been extracted
                     os.remove(OUT_DIRECTORY + filename)
 
-            #Inform user
             print('Leaf-classification dataset has been extracted.')
