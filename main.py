@@ -85,7 +85,7 @@ if __name__ == '__main__':
                                             gamma =  np.logspace(-9,np.log10(2), 20)
                                             )
     cgsGenerativeModel = ClassifierGridSearch( classifier='GenerativeModel')
-    cgsLogisticRegression = ClassifierGridSearch(   classifier = 'LogisticRegression',
+    cgsLogisticRegression = ClassifierGridSearch(   classifier = 'LogisticRegressionModel',
                                                     solver= ['liblinear'],                       # solver {‘newton-cg’, ‘lbfgs’, ‘liblinear’, ‘sag’, ‘saga’}
                                                     random_state = [0],                          # Control randomness
                                                     penalty = ['l2'],                            # penalty {‘l1’, ‘l2’, ‘elasticnet’, ‘none’}
