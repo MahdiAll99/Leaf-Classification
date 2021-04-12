@@ -1,4 +1,7 @@
-
+"""
+MAHDI AIT LHAJ LOUTFI (aitm2302)
+YOVAN TUROCTTE (tury1903)
+"""
 import json
 #This class will manage the data processing
 class Preprocesser:

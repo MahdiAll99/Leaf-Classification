@@ -1,4 +1,7 @@
-
+"""
+MAHDI AIT LHAJ LOUTFI (aitm2302)
+YOVAN TUROCTTE (tury1903)
+"""
 from src.Manager import run
 import numpy as np
 import itertools

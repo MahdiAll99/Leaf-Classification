@@ -1,5 +1,11 @@
 #!/usr/bin/python
 #-*- coding: utf-8 -*-
+
+"""
+MAHDI AIT LHAJ LOUTFI (aitm2302)
+YOVAN TUROCTTE (tury1903)
+"""
+
 import uuid
 import numpy as np
 import pandas as pd
