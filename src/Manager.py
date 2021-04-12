@@ -172,19 +172,19 @@ def runTestSet(DataPreProcessingParams:dict, ClassificationParams:dict, Statisti
     # 3. Train
     if(verbose): print('Fitting model...',end='')
     clf = classification.getClassifier(**ClassificationParams)
-    clf.fit(DP.df_Train,DP.labels_Train)
+    clf.fit(DP.df_Train(),DP.labels_Train())
     if(verbose): print('Done!')
 
     # 4. Prediction
     if(verbose): 
         print('Prediciting Test Set...',end='')
-    predictions = clf.predict(DP.df_Test.values)
+    predictions = clf.predict(DP.df_Test().values)
     if(verbose): 
         print('Done!')
 
     # 5. Statistics
-    RM.appendLabels(predictions, DP.labels_Test.values)
-    return {'predictions':predictions,'truths':DP.labels_Test.values, 'metrics':RM.getStatistics()}
+    RM.appendLabels(predictions, DP.labels_Test().values)
+    return {'predictions':predictions,'truths':DP.labels_Test().values, 'metrics':RM.getStatistics()}
 
 def run(DataPreProcessingParams:dict, ClassificationParams:dict, StatisticsParams:list, verbose = False):
     """
@@ -273,7 +273,7 @@ if __name__ == '__main__':
             'max_iter': 1000
             },
             {
-            'classifier': 'LogisticRegression',
+            'classifier': 'LogisticRegressionModel',
             'solver': 'liblinear',                      # solver {‘newton-cg’, ‘lbfgs’, ‘liblinear’, ‘sag’, ‘saga’}
             'random_state': 0,                          # Control randomness
             'penalty': 'l2',                            # penalty {‘l1’, ‘l2’, ‘elasticnet’, ‘none’}
