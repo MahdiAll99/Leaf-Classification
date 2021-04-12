@@ -1,12 +1,12 @@
 
 import pandas as pd
 from src.DataProcesser.PreProcesser import Preprocesser
-from sklearn.discriminant_analysis  import LinearDiscriminantAnalysis as LDA
+from sklearn.decomposition  import PCA as _PCA
 
 class LDA(Preprocesser):
     def __init__(self,**kwargs):
         super().__init__()
-        self._method = LDA(**kwargs)
+        self._method = _PCA(**kwargs)
         self.hyperparams = self._method.get_params
         
     def preprocess(self, data):
