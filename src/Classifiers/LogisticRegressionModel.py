@@ -8,7 +8,7 @@ import sklearn.linear_model as lm
 class LogisticRegressionModel(Classifier):
     def __init__(self, **kwargs):
         super().__init__()
-        self._model = lm.LogisticRegressionModel(**kwargs)
+        self._model = lm.LogisticRegression(**kwargs)
 
     def fit(self, X, Y):
         """

@@ -85,7 +85,7 @@ if __name__ == '__main__':
                                             gamma =  np.logspace(-9,np.log10(2), 20)
                                             )
     cgsGenerativeModel = ClassifierGridSearch( classifier='GenerativeModel')
-    cgsLogisticRegression = ClassifierGridSearch(   classifier = 'LogisticRegression',
+    cgsLogisticRegression = ClassifierGridSearch(   classifier = 'LogisticRegressionModel',
                                                     solver= ['liblinear'],                       # solver {‘newton-cg’, ‘lbfgs’, ‘liblinear’, ‘sag’, ‘saga’}
                                                     random_state = [0],                          # Control randomness
                                                     penalty = ['l2'],                            # penalty {‘l1’, ‘l2’, ‘elasticnet’, ‘none’}
@@ -100,7 +100,7 @@ if __name__ == '__main__':
                                                 learning_rate = ['invscaling'],              # learning_rate{‘constant’, ‘invscaling’, ‘adaptive’}
                                                 max_iter= [1000]
                                                 )
-    cgsPerception = ClassifierGridSearch(   classifier = 'Perceptron',
+    cgsPerceptron = ClassifierGridSearch(   classifier = 'Perceptron',
                                             loss = ['perceptron'],
                                             penalty = ['l2'],
                                             alpha =  np.logspace(-9,np.log10(2),num=20), # Regularization parameter
@@ -115,7 +115,7 @@ if __name__ == '__main__':
                                                 )
 
     # 4. Create Generator that generates hyperparameter values
-    cgs = itertools.chain(*map(lambda x: x.gridsearchGenerator(), [cgsKernelModel, cgsGenerativeModel, cgsLogisticRegression, cgsNeuralNetwork, cgsPerception, cgsSVM]))
+    cgs = itertools.chain(*map(lambda x: x.gridsearchGenerator(), [cgsKernelModel, cgsGenerativeModel, cgsLogisticRegression, cgsNeuralNetwork, cgsPerceptron, cgsSVM]))
     gen = itertools.product(cgs,cases.gridsearch())
     
     # 5. Advance generator to right place. Necessary if mid grid-search crash so as not to start all over again.
