@@ -289,7 +289,7 @@ if __name__ == '__main__':
             'eta0': 1,                                  # Constant by which the updates are multiplied
             },
             {
-            'classifier': 'KernelMethod',
+            'classifier': 'KernelModel',
             'alpha': 0.0001,
             'kernel': 'rbf',
             'gamma': 0.001                              # gamma defines how much influence a single training example has
