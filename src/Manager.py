@@ -149,7 +149,7 @@ def runTestSet(DataPreProcessingParams:dict, ClassificationParams:dict, Statisti
     ==========
     DataPreProcessingParams: dict -> Parameters to send to the DataManagement module.
     ClassificationParams: dict -> Parameters to send to the Classifiers module.
-    StatisticsParams: list -> Parameters to send to the Statistician module.
+    StatisticsParams: list -> Parameters to send to the ResultManager module.
 
     Returns
     =======
@@ -166,8 +166,8 @@ def runTestSet(DataPreProcessingParams:dict, ClassificationParams:dict, Statisti
     DP.importAndPreprocess(label_name = 'species',verbose=verbose)
     DP.split_data(test_ratio=0.1)
 
-    # 2. Create Statistician
-    stats = ResultManager(StatisticsParams)
+    # 2. Create ResultManager
+    RM = ResultManager(StatisticsParams)
 
     # 3. Train
     if(verbose): print('Fitting model...',end='')
@@ -183,8 +183,8 @@ def runTestSet(DataPreProcessingParams:dict, ClassificationParams:dict, Statisti
         print('Done!')
 
     # 5. Statistics
-    stats.appendLabels(predictions, DP.labels_Test.values)
-    return {'predictions':predictions,'truths':DP.labels_Test.values, 'metrics':stats.getStatistics()}
+    RM.appendLabels(predictions, DP.labels_Test.values)
+    return {'predictions':predictions,'truths':DP.labels_Test.values, 'metrics':RM.getStatistics()}
 
 def run(DataPreProcessingParams:dict, ClassificationParams:dict, StatisticsParams:list, verbose = False):
     """
@@ -194,7 +194,7 @@ def run(DataPreProcessingParams:dict, ClassificationParams:dict, StatisticsParam
     ==========
     DataPreProcessingParams: dict -> Parameters to send to the DataManagement module.
     ClassificationParams: dict -> Parameters to send to the Classifiers module.
-    StatisticsParams: list -> Parameters to send to the Statistician module.
+    StatisticsParams: list -> Parameters to send to the ResultManager module.
 
     Returns
     =======
@@ -210,8 +210,8 @@ def run(DataPreProcessingParams:dict, ClassificationParams:dict, StatisticsParam
     DP = DataProcesser(**DataPreProcessingParams)
     DP.importAndPreprocess(label_name = 'species',verbose=verbose)
 
-    # 2. Create Statistician
-    stats = statistics.Statistician(StatisticsParams)
+    # 2. Create ResultManager
+    RM = ResultManager(StatisticsParams)
 
     # 3. Perform K-fold
     if(verbose): print('Performing K-fold....',end='')
@@ -226,16 +226,16 @@ def run(DataPreProcessingParams:dict, ClassificationParams:dict, StatisticsParam
         # 6. Get predictions
         predictions = clf.predict(val_data)
 
-        # 7. Add labels to statistician
-        stats.appendLabels(predictions, val_labels.values)
+        # 7. Add labels to ResultManager
+        RM.appendLabels(predictions, val_labels.values)
 
     if(verbose): 
         print('Done!')
     # 8. Calculate average statistics
-    statisticsJson = stats.getStatistics()
+    statisticsJson = RM.getStatistics()
     
-    stats_name = str(uuid.uuid1())
-    return {stats_name:{'pipeline':case,'results':statisticsJson}}
+    RM_name = str(uuid.uuid1())
+    return {RM_name:{'pipeline':case,'results':statisticsJson}}
 
 if __name__ == '__main__':
     case = {
