@@ -28,3 +28,34 @@ REF : https://www.kaggle.com/c/leaf-classification/data
 ## Classifiers class design :
 
 ![](IFT712-Project.png)
+
+### Installing dependencies 
+
+To run the code, certain python libraries must be installed. We recommend creating a virtual
+python environment. Once the virtual environment is created, activate it and the necessary packages can be installed with:
+```
+pip install -r requirements.txt
+```
+
+### Unpack Datasets
+
+To unpack dataset, run from root folder:
+```bash
+python3 ./dataset/leaf-classification.py
+```
+
+### Verify and Run
+
+To verify that the setup is complete, navigate to the project root folder and type in a terminal window:
+```bash
+python -m src.Manager
+```
+After the verification is done, you can run the code using the following command from the project root folder:
+```bash
+python main.py
+```
+You can then find the results in /results/results.json
+
+### Notebook
+The project notebook is found in /notebooks called `IFT712-PORJECT-NOTEBOOK.ipynb`. In this notebook you can see data exploration and analysis and also visualise all GridResearch results. 
+
