@@ -152,8 +152,8 @@ class DataProcesser:
         for train_idxes, val_idxes in kf.split(self.df_Train().to_numpy(), self.labels_Train().to_numpy()):
             train_data = self.df_Train().iloc[train_idxes]
             val_data = self.df_Train().iloc[val_idxes]
-            train_labels = self.labels_Train.iloc[train_idxes]
-            val_labels = self.labels_Train.iloc[val_idxes]
+            train_labels = self.labels_Train().iloc[train_idxes]
+            val_labels = self.labels_Train().iloc[val_idxes]
             yield  train_data, val_data, train_labels, val_labels
 
 
