@@ -1,6 +1,5 @@
 # Project
-
-IFT-712-Technique d'apprentissage-Projet
+Kaggle Challenge: Leaf Classification
 
 The objective of this project is to use binary leaf images and extracted features, including shape, margin & texture, to accurately identify 99 species of plants.
 We are using six classifiers that uses the provided pre-extracted features to learn, and try to examine the errors what we can do to improve in terms of cross-validation implementation and search of the best hyperparameters.
@@ -57,5 +56,5 @@ python main.py
 You can then find the results in /results/results.json
 
 ### Notebook
-The project notebook is found in /notebooks called `IFT712-PORJECT-NOTEBOOK.ipynb`. In this notebook you can see data exploration and analysis and also visualise all GridResearch results. 
+The project notebook is found in /notebooks called `KAGGLE-CHALLENGE-NOTEBOOK.ipynb`. In this notebook you can see data exploration and analysis and also visualise all GridResearch results. 
 
